@@ -1,0 +1,32 @@
+{
+    "name": "ondics/yii1-spreadsheet",
+    "description": "Yii1 extension for export to a spreadsheet, e.g. Excel, LibreOffice etc.",
+    "keywords": ["yii1", "spreadsheet", "excel", "libreoffice", "export", "xls", "xlsx"],
+    "type": "yii1-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yii2tech/spreadsheet/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "https://github.com/yii2tech/spreadsheet/wiki",
+        "source": "https://github.com/yii2tech/spreadsheet"
+    },
+    "authors": [
+        {
+            "name": "Ondics Githubler",
+            "email": "githubler@ondics.de"
+        }
+    ],
+    "require": {
+        "yiisoft/yii": "~1.1.20",
+        "phpoffice/phpspreadsheet": "~1.1"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "ondics\\yii1-spreadsheet\\": "src" }
+    }
+}
