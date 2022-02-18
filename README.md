@@ -3,8 +3,8 @@ Yii1 Spreadsheet Extensions
 
 Provides very easy Excel-Output for Yii1
 
-* works with CArrayDataProvider
-* works with CActiveDataProvider
+* works with `CArrayDataProvider`
+* works with `CActiveDataProvider`
 * provides flexible value formatting with PHP closures (see below)
 
 This yii1 extension is a light backport of https://github.com/yii2tech/spreadsheet to Yii1.
