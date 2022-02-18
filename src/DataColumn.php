@@ -5,13 +5,16 @@
  * @license [New BSD License](http://www.opensource.org/licenses/bsd-license.php)
  */
 
-namespace yii2tech\spreadsheet;
+namespace ondics\yii1spreadsheet;
 
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use yii\db\ActiveQueryInterface;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Inflector;
+use Yii;
+use ondics\yii1spreadsheet\BaseArrayHelper as ArrayHelper;
+use ondics\yii1spreadsheet\Column;
+// use yii\base\Model;
+// use yii\data\ActiveDataProvider;
+// use yii\db\ActiveQueryInterface;
+// use yii\helpers\ArrayHelper;
+// use yii\helpers\Inflector;
 
 /**
  * DataColumn is the default column type for the {@see Spreadsheet}.
@@ -81,17 +84,21 @@ class DataColumn extends Column
         $provider = $this->grid->dataProvider;
 
         if ($this->label === null) {
-            if ($provider instanceof ActiveDataProvider && $provider->query instanceof ActiveQueryInterface) {
+            if ($provider instanceof CActiveDataProvider && $provider->query instanceof ActiveQueryInterface) {
                 /* @var $model Model */
-                $model = new $provider->query->modelClass;
+                //$model = new $provider->query->modelClass;
+                $model = new $provider->model;
                 $label = $model->getAttributeLabel($this->attribute);
             } else {
-                $models = $provider->getModels();
-                if (($model = reset($models)) instanceof Model) {
+                //$models = $provider->getModels();
+                $models = $provider->getData();
+                if (($model = reset($models)) instanceof CModel) {
                     /* @var $model Model */
                     $label = $model->getAttributeLabel($this->attribute);
                 } else {
-                    $label = Inflector::camel2words($this->attribute);
+                    //$label = Inflector::camel2words($this->attribute);
+                    // keine Mehrzahlbildung notwenig
+                    $label = $this->attribute;
                 }
             }
         } else {

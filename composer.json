@@ -1,5 +1,5 @@
 {
-    "name": "ondics/yii1-spreadsheet",
+    "name": "ondics/yii1spreadsheet",
     "description": "Yii1 extension for export to a spreadsheet, e.g. Excel, LibreOffice etc.",
     "keywords": ["yii1", "spreadsheet", "excel", "libreoffice", "export", "xls", "xlsx"],
     "type": "yii1-extension",
@@ -27,6 +27,6 @@
         }
     ],
     "autoload": {
-        "psr-4": { "ondics\\yii1-spreadsheet\\": "src" }
+        "psr-4": { "ondics\\yii1spreadsheet\\": "src" }
     }
 }

@@ -5,10 +5,10 @@
  * @license [New BSD License](http://www.opensource.org/licenses/bsd-license.php)
  */
 
-namespace yii2tech\spreadsheet;
+namespace ondics\yii1spreadsheet;
 
 use Closure;
-use yii\base\BaseObject;
+use ondics\yii1spreadsheet\BaseObject;
 
 /**
  * Column is the base class of all {@see Spreadsheet}} column classes.

@@ -5,17 +5,23 @@
  * @license [New BSD License](http://www.opensource.org/licenses/bsd-license.php)
  */
 
-namespace yii2tech\spreadsheet;
+namespace ondics\yii1spreadsheet;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use yii\data\ActiveDataProvider;
-use yii\helpers\FileHelper;
-use yii\i18n\Formatter;
 use Yii;
-use yii\base\Component;
-use yii\base\InvalidConfigException;
-use yii\di\Instance;
-use yii\web\Response;
+use ondics\yii1spreadsheet\DataColumn;
+use CException;
+use CApplicationComponent;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet as PhpSpreadsheet;
+
+// use yii\data\ActiveDataProvider;
+// use yii\helpers\FileHelper;
+// use yii\i18n\Formatter;
+// use Yii;
+// use yii\base\Component;
+// use yii\base\InvalidConfigException;
+// use yii\di\Instance;
+// use yii\web\Response;
 
 /**
  * Spreadsheet allows export of data provider into Excel document via {@see \PhpOffice\PhpSpreadsheet\Spreadsheet} library.
@@ -67,7 +73,7 @@ use yii\web\Response;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
-class Spreadsheet extends Component
+class Spreadsheet extends CApplicationComponent
 {
     /**
      * @var \yii\data\DataProviderInterface the data provider for the view. This property is required.
@@ -204,6 +210,24 @@ class Spreadsheet extends Component
      */
     private $batchInfo;
 
+    
+    // public function __construct(array $config)
+    // {
+    //     $this->dataProvider = $config["dataProvider"] ?? null;
+    //     $this->columns = $config["columns"] ?? null;
+    //     $this->batchSize = $config["batchSize"] ?? $this->batchSize;
+    //     $this->showHeader = $config["showHeader"] ?? $this->showHeader;
+    //     $this->showFooter= $config["showFooter"] ?? $this->showFooter;
+    //     $this->title= $config["title"] ?? $this->title;
+    //     $this->emptyCell = $config["emptyCell"] ?? $this->emptyCell;
+    //     $this->nullDisplay = $config["nullDisplay"] ?? $this->nullDisplay;
+    //     if (isset($config["query"])) {
+    //         throw new CException("ups, batch geht noch nicht");        
+    //     }
+    // }
+
+    public function init() {
+    }
 
     /**
      * @return \PhpOffice\PhpSpreadsheet\Spreadsheet spreadsheet document representation instance.
@@ -211,7 +235,7 @@ class Spreadsheet extends Component
     public function getDocument()
     {
         if (!is_object($this->_document)) {
-            $this->_document = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $this->_document = new PhpSpreadsheet();
         }
         return $this->_document;
     }
@@ -231,10 +255,12 @@ class Spreadsheet extends Component
     {
         if (!is_object($this->_formatter)) {
             if ($this->_formatter === null) {
-                $this->_formatter = Yii::$app->getFormatter();
-            } else {
-                $this->_formatter = Instance::ensure($this->_formatter, Formatter::class);
+                //$this->_formatter = Yii::$app->getFormatter();
+                $this->_formatter = Yii::app()->format;
             }
+            // } else {
+            //     $this->_formatter = Instance::ensure($this->_formatter, Formatter::class);
+            // }
         }
         return $this->_formatter;
     }
@@ -256,10 +282,13 @@ class Spreadsheet extends Component
             if (is_string($column)) {
                 $column = $this->createDataColumn($column);
             } elseif (is_array($column)) {
-                $column = Yii::createObject(array_merge([
-                    'class' => DataColumn::class,
-                    'grid' => $this,
-                ], $column));
+                // $column = Yii::createObject(array_merge([
+                //     'class' => DataColumn::class,
+                //     'grid' => $this,
+                // ], $column));
+                $column = new DataColumn($column);
+                $column->grid = $this;
+                
             }
             if (!$column->visible) {
                 unset($this->columns[$i]);
@@ -292,16 +321,25 @@ class Spreadsheet extends Component
     protected function createDataColumn($text)
     {
         if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $text, $matches)) {
-            throw new InvalidConfigException('The column must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"');
+            throw new CException('The column must be specified in the format of "attribute", '.
+                '"attribute:format" or "attribute:format:label"');
         }
 
-        return Yii::createObject([
-            'class' => DataColumn::class,
-            'grid' => $this,
-            'attribute' => $matches[1],
-            'format' => isset($matches[3]) ? $matches[3] : 'raw',
-            'label' => isset($matches[5]) ? $matches[5] : null,
-        ]);
+        // return Yii::createObject([
+        //     'class' => DataColumn::class,
+        //     'grid' => $this,
+        //     'attribute' => $matches[1],
+        //     'format' => isset($matches[3]) ? $matches[3] : 'raw',
+        //     'label' => isset($matches[5]) ? $matches[5] : null,
+        // ]);
+
+        $dataColumn = new DataColumn();
+        $dataColumn->grid = $this;
+        $dataColumn->attribute =  $matches[1];
+        $dataColumn->format =  isset($matches[3]) ? $matches[3] : 'raw';
+        $dataColumn->label =  isset($matches[5]) ? $matches[5] : null;
+        return $dataColumn;
+
     }
 
     /**
@@ -347,6 +385,7 @@ class Spreadsheet extends Component
      */
     public function configure($properties)
     {
+        throw new CException("ups, geht noch nicht");        
         Yii::configure($this, $properties);
         return $this;
     }
@@ -359,7 +398,8 @@ class Spreadsheet extends Component
     {
         if ($this->dataProvider === null) {
             if ($this->query !== null) {
-                $this->dataProvider = new ActiveDataProvider([
+                throw new CException("query in CDataProvider - wo?");
+                $this->dataProvider = new CDataProvider([
                     'query' => $this->query,
                     'pagination' => [
                         'pageSize' => $this->batchSize,
@@ -429,6 +469,7 @@ class Spreadsheet extends Component
             foreach ($this->columns as $column) {
                 /* @var $column Column */
                 $column->renderDataCell($columnIndex . $this->rowIndex, $model, $key, $modelIndex);
+
                 $columnIndex++;
             }
             $this->rowIndex++;
@@ -590,7 +631,8 @@ class Spreadsheet extends Component
                 if ($page === 0) {
                     $this->batchInfo['page']++;
                     return [
-                        $this->dataProvider->getModels(),
+                        //$this->dataProvider->getModels(),
+                        $this->dataProvider->getData(),
                         $this->dataProvider->getKeys()
                     ];
                 }
@@ -600,7 +642,8 @@ class Spreadsheet extends Component
                     $this->dataProvider->prepare(true);
                     $this->batchInfo['page']++;
                     return [
-                        $this->dataProvider->getModels(),
+                        //$this->dataProvider->getModels(),
+                        $this->dataProvider->getData(),
                         $this->dataProvider->getKeys()
                     ];
                 }
@@ -719,9 +762,10 @@ class Spreadsheet extends Component
             $writerType = ucfirst($fileExtension);
         }
 
+
         $tmpResource = tmpfile();
         if ($tmpResource === false) {
-            throw new \RuntimeException('Unable to create temporary file.');
+            throw new CException('Unable to create temporary file.');
         }
 
         $tmpResourceMetaData = stream_get_meta_data($tmpResource);
@@ -733,7 +777,17 @@ class Spreadsheet extends Component
 
         $tmpFileStatistics = fstat($tmpResource);
         if ($tmpFileStatistics['size'] > 0) {
-            return Yii::$app->getResponse()->sendStreamAsFile($tmpResource, $attachmentName, $options);
+            //return Yii::$app->getResponse()->sendStreamAsFile($tmpResource, $attachmentName, $options);
+            return Yii::app()->getRequest()->sendFile(
+                $attachmentName, 
+                file_get_contents($tmpFileName)
+            );
+            // return Yii::app()->getRequest()->xSendFile(
+            //     $tmpFileName, 
+            //     array_merge($options,[
+            //         'saveName' => $attachmentName,
+            //     ])
+            // );
         }
 
         // some writers, like 'Xlsx', may delete target file during the process, making temporary file resource invalid
