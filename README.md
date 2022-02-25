@@ -7,6 +7,8 @@ Provides very easy Excel-Output for Yii1
 * works with `CActiveDataProvider`
 * provides flexible value formatting with PHP closures (see below)
 
+This extension was built because the extension [phpoffice/phpexcel](https://packagist.org/packages/phpoffice/phpexcel) is marked as "archived/abandoned" and there was no Yii1 extension as successor to use the recommended [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) library.
+
 Tested with Yii1 version 1.1.25
 
 ## Installation
