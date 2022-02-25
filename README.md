@@ -12,6 +12,24 @@ This yii1 extension is a light backport of https://github.com/yii2tech/spreadshe
 
 Tested with Yii1 version 1.1.25
 
+## Installation
+
+The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+
+Either run
+
+```
+php composer.phar require --prefer-dist ondics/yii1spreadsheet
+```
+
+or add
+
+```json
+"ondics/spreadsheet": "*"
+```
+
+to the `require` section of your composer.json.
+
 ## Usage
 
     $dataProvider = new CArrayDataProvider([
