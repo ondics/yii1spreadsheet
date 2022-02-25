@@ -7,9 +7,6 @@ Provides very easy Excel-Output for Yii1
 * works with `CActiveDataProvider`
 * provides flexible value formatting with PHP closures (see below)
 
-This yii1 extension is a light backport of https://github.com/yii2tech/spreadsheet to Yii1.
-
-
 Tested with Yii1 version 1.1.25
 
 ## Installation
@@ -55,6 +52,16 @@ to the `require` section of your composer.json.
               'visible' => ($model->price  > 20),
     ];
     $exporter->send('myexcelfile.xlsx');
+
+## Application Notes
+
+This yii1 extension is a light backport of https://github.com/yii2tech/spreadsheet to Yii1. Some ii2 base classes and freatures are provided
+with this extensions and can be used during Excel export, e.g.
+
+* In `colums` a closure can be used as value. This closue differs from the closure in Yii1. See the example above how to use this closure.
+* The columns array is backported from Yii2 so see Yii2 docs for information
+
+The `send` method cannot not use xsendfile to send a file directyle to the browser but has go over memory. This may affect very large Excel exports.
 
 ## Credits
 
