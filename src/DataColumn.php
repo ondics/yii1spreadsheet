@@ -84,16 +84,13 @@ class DataColumn extends Column
         $provider = $this->grid->dataProvider;
 
         if ($this->label === null) {
-            if ($provider instanceof CActiveDataProvider) {
-                /* @var $model Model */
-                //$model = new $provider->query->modelClass;
+            // instanceof geht nicht, warum auch immer...
+            if (get_class($provider) == "CActiveDataProvider") {
                 $model = new $provider->model;
                 $label = $model->getAttributeLabel($this->attribute);
             } else {
-                //$models = $provider->getModels();
                 $models = $provider->getData();
                 if (($model = reset($models)) instanceof CModel) {
-                    /* @var $model Model */
                     $label = $model->getAttributeLabel($this->attribute);
                 } else {
                     //$label = Inflector::camel2words($this->attribute);
