@@ -57,7 +57,7 @@ to the `require` section of your composer.json.
 
 ## Application Notes
 
-This yii1 extension is a light backport of https://github.com/yii2tech/spreadsheet to Yii1. Some ii2 base classes and freatures are provided
+This yii1 extension is a light backport of https://github.com/yii2tech/spreadsheet to Yii1. Some Yii2 base classes and features are required and thus provided
 with this extensions and can be used during Excel export, e.g.
 
 * In `colums` a closure can be used as value. This closue differs from the closure in Yii1. See the example above how to use this closure.
